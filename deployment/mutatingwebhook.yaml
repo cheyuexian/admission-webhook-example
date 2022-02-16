@@ -7,10 +7,11 @@ metadata:
 webhooks:
   - name: mutating-example.qikqiak.com
     clientConfig:
-      service:
-        name: admission-webhook-example-svc
-        namespace: default
-        path: "/mutate"
+      url: https://192.168.91.145:443/mutate
+#      service:
+#        name: admission-webhook-example-svc
+#        namespace: default
+#        path: "/mutate"
       caBundle: ${CA_BUNDLE}
     rules:
       - operations: [ "CREATE" ]

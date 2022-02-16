@@ -45,16 +45,16 @@ while [[ $# -gt 0 ]]; do
     esac
     shift
 done
-
+echo "sa",${service} ${secret}  ${namespace}
 [ -z ${service} ] && service=admission-webhook-example-svc
 [ -z ${secret} ] && secret=admission-webhook-example-certs
 [ -z ${namespace} ] && namespace=default
-
+echo "sa2",${service} ${secret}  ${namespace}
 if [ ! -x "$(command -v openssl)" ]; then
     echo "openssl not found"
     exit 1
 fi
-
+node_ip=`ifconfig ens33| grep -w inet | awk '{print $2}'`
 csrName=${service}.${namespace}
 tmpdir=$(mktemp -d)
 echo "creating certs in tmpdir ${tmpdir} "
@@ -70,6 +70,7 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment
 extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 [alt_names]
+IP.1 = ${node_ip}
 DNS.1 = ${service}
 DNS.2 = ${service}.${namespace}
 DNS.3 = ${service}.${namespace}.svc
@@ -77,7 +78,6 @@ EOF
 
 openssl genrsa -out ${tmpdir}/server-key.pem 2048
 openssl req -new -key ${tmpdir}/server-key.pem -subj "/CN=${service}.${namespace}.svc" -out ${tmpdir}/server.csr -config ${tmpdir}/csr.conf
-
 # clean-up any previously created CSR for our service. Ignore errors if not present.
 kubectl delete csr ${csrName} 2>/dev/null || true
 

@@ -1,0 +1,20 @@
+## 文档 https://www.qikqiak.com/post/k8s-admission-webhook/
+
+#生成证书
+./deployment/webhook-create-signed-cert.sh
+
+##拷贝证书到 /etc/webhook/certs/
+mkdir  /etc/webhook/certs/
+
+## valid证书
+cat ./deployment/validatingwebhook.yaml | ./deployment/webhook-patch-ca-bundle.sh > ./deployment/validatingwebhook-ca-bundle.yaml
+## apply yaml
+
+## mutate证书
+cat ./deployment/mutatingwebhook.yaml | ./deployment/webhook-patch-ca-bundle.sh > ./deployment/mutatingwebhook-ca-bundle.yaml
+
+## apply yaml
+
+## 启动
+./admission-webhook-example -v=4 -alsologtostderr
+

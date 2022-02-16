@@ -7,10 +7,11 @@ metadata:
 webhooks:
   - name: required-labels.qikqiak.com
     clientConfig:
-      service:
-        name: admission-webhook-example-svc
-        namespace: default
-        path: "/validate"
+      url: https://192.168.91.145:443/validate
+#      service:
+#        name: admission-webhook-example-svc
+#        namespace: default
+#        path: "/validate"
       caBundle: ${CA_BUNDLE}
     rules:
       - operations: [ "CREATE" ]
